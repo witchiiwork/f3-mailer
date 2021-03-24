@@ -129,15 +129,6 @@ class Mailer {
     }
 
     /**
-     * set message to
-     * @param $email
-     * @param null $title
-     */
-    public function setTo($email, $title = null) {
-        $this->set("To", $this->buildMail($email, $title));
-    }
-
-    /**
      * add a direct recipient
      * @param $email
      * @param null $title
