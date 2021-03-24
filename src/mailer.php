@@ -41,7 +41,7 @@ class Mailer {
         /** @var \Base $f3 */
         $f3 = \Base::instance();
 
-        $this->smtp = new \SMTP($f3->get("mailer.smtp.host"), $f3->get("mailer.smtp.port"), $f3->get("mailer.smtp.scheme"), $f3->get("mailer.smtp.username"), $f3->get("mailer.smtp.password"));
+        $this->smtp = new \SMTP($f3->get("mailer.smtp.host"), $f3->get("mailer.smtp.port"), $f3->get("mailer.smtp.scheme"), $f3->get("mailer.smtp.user"), $f3->get("mailer.smtp.pass"));
 
         if(!$f3->devoid("mailer.email.error", $email_error)) {
             $this->setErrors($email_error);
@@ -300,20 +300,20 @@ class Mailer {
 
         foreach($this->message as $msg) {
             if($multipart) {
-                $body .= "--".$hash.static::$EOL;
-                $body .= "Content-Type: ".$msg["type"].static::$EOL.static::$EOL;
+                $body .= "--" . $hash . static::$EOL;
+                $body .= "Content-Type: " . $msg["type"] . static::$EOL . static::$EOL;
             } else {
                 $this->smtp->set("Content-Type", $msg["type"]);
             }
 
-            $body .= $msg["content"].static::$EOL.static::$EOL;
+            $body .= $msg["content"] . static::$EOL . static::$EOL;
         }
 
         if($multipart) {
-            $body .= "--".$hash."--".static::$EOL;
+            $body .= "--" . $hash . "--" . static::$EOL;
         }
 
-        $success = $this->smtp->send($this->encode($body),$log,$mock);
+        $success = $this->smtp->send($this->encode($body), $log, $mock);
         $f3 = \Base::instance();
 
         if(!$success && $f3->exists("mailer.on.failure", $fail_handler)) {
